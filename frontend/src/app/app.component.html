@@ -1,0 +1,5 @@
+<div *ngIf="healthCheckResult" class="container">
+  <span>Status: {{ healthCheckResult.status }}</span>
+  <span>Date: {{ healthCheckResult.date | date : "short" }}</span>
+  <span>Message: {{ healthCheckResult.message }}</span>
+</div>
