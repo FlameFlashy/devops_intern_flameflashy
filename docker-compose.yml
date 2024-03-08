@@ -1,6 +1,17 @@
 version: '3.7'
 
 services:
+  database:
+    image: postgres:11
+    volumes:
+      - ./pg_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
+    ports:
+      - "5432:5432"
+
   frontend:
     build:
       context: ./frontend
@@ -20,17 +31,6 @@ services:
       - "8000:8000"
     depends_on:
       - database
-
-  database:
-    image: postgres:11
-    volumes:
-      - ./pg_data:/var/lib/postgresql/data
-    environment:
-      - POSTGRES_USER=${DB_USER}
-      - POSTGRES_PASSWORD=${DB_PASSWORD}
-      - POSTGRES_DB=${DB_NAME}
-    ports:
-      - "5432:5432"
 
   nginx:
     build:
