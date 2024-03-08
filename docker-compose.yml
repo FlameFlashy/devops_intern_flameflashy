@@ -11,6 +11,10 @@ services:
     build:
       context: ./app
     environment:
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_ENDPOINT=${DB_ENDPOINT}
+      - DB_NAME=${DB_NAME}
       - POSTGRES_HOST_AUTH_METHOD=${POSTGRES_HOST_AUTH_METHOD}
     ports:
       - "8000:8000"
