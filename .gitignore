@@ -3,3 +3,4 @@
 *.bak
 *output
 *.env
+/pg_data*
