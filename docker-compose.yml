@@ -1,0 +1,42 @@
+version: '3.7'
+
+services:
+  database:
+    image: postgres:11
+    volumes:
+      - ./pg_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
+    ports:
+      - "5432:5432"
+
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "4200:4200"
+
+  app:
+    build:
+      context: ./app
+    environment:
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_ENDPOINT=${DB_ENDPOINT}
+      - DB_NAME=${DB_NAME}
+      - POSTGRES_HOST_AUTH_METHOD=${POSTGRES_HOST_AUTH_METHOD}
+    ports:
+      - "8000:8000"
+    depends_on:
+      - database
+
+  nginx:
+    build:
+      context: ./frontend/nginx/configs
+    ports:
+      - "80:80"
+    depends_on:
+      - frontend
+      - app
