@@ -33,6 +33,7 @@ jobs:
 
       - name: Build Docker image
         run: |
+          cd frontend
           docker build -t fe_devops:latest .
           mkdir -p ${{ github.workspace }}/artifacts
           docker save fe_devops:latest > ${{ github.workspace }}/artifacts/fe_devops_latest.tar

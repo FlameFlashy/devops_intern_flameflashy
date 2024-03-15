@@ -18,16 +18,19 @@ jobs:
 
       - name: Check lint with flake8
         run: |
+          cd app
           pip install flake8
           flake8
 
       - name: Run tests with pytest
         run: |
+          cd app
           pip install pytest
           pytest app/tests/
 
       - name: Build Docker image
         run: |
+          cd app
           docker build -t be_devops:latest .
       
       - name: Save Docker image as artifact
