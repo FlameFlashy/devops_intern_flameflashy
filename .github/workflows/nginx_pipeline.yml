@@ -1,0 +1,30 @@
+name: Nginx Pipeline
+
+on:
+  push:
+    paths:
+      - 'frontend/nginx/configs/**'
+  pull_request:
+    paths:
+      - 'frontend/nginx/configs/**' 
+
+jobs:
+  build_and_save_image:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Build Docker image
+      run: 
+        cd frontend/nginx/configs/
+        docker build -t nginx_devops:latest .
+
+    - name: Save Docker image as artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: nginx-image
+        path: .
+      env:
+        retention-days: 1
