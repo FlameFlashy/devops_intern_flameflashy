@@ -26,7 +26,7 @@ jobs:
         run: |
           cd app
           pip install pytest
-          pytest app/tests/
+          pytest tests/
 
       - name: Build Docker image
         run: |

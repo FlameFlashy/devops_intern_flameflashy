@@ -13,6 +13,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Convert CRLF to LF in start.sh
 # RUN apt-get update && apt-get install -y dos2unix && dos2unix start.sh && apt-get --purge remove -y dos2unix && rm -rf /var/lib/apt/lists/*
 
+
 # Make start.sh script executable
 RUN chmod +x start.sh
 
