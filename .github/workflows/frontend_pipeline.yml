@@ -20,13 +20,14 @@ jobs:
         run: sudo apt-get update && sudo apt-get install chromium-browser -y
 
       - name: Change directory to frontend
-        run: cd frontend/
+        run: cd frontend && npm install
 
       - name: Check lint
-        run: npm run lint
+        run: cd frontend && npm run lint
 
       - name: Run tests
         run: |
+          cd frontend
           npm ci
           npm run test:ci
 

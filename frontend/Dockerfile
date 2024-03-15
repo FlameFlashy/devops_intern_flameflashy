@@ -7,6 +7,7 @@ COPY . .
 RUN npm run build --prod --outputPath=./dist/frontend
 
 
+
 # Stage 2: Serve Angular application with Nginx
 FROM nginx:1.25.4-alpine
 COPY --from=build-stage /app/dist/frontend/ /usr/share/nginx/html/frontend
