@@ -18,7 +18,9 @@ jobs:
 
     - name: Build Docker image
       run: 
-        cd frontend/nginx/configs
+        cd frontend
+        cd nginx 
+        cd configs
         docker build -t nginx_devops:latest .
 
     - name: Save Docker image as artifact
