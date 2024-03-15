@@ -27,6 +27,7 @@ jobs:
           cd app
           pip install fastapi
           pip install httpx
+          pip install pytest-mock
           pip install pytest
           pytest tests/
 
