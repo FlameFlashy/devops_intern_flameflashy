@@ -35,11 +35,11 @@ jobs:
         run: |
           cd frontend
           docker build -t fe_devops:latest .
-          mkdir -p ${{ github.workspace }}/artifacts
-          docker save fe_devops:latest > ${{ github.workspace }}/artifacts/fe_devops_latest.tar
 
-      - name: Upload artifact
+      - name: Save Docker image as artifact
         uses: actions/upload-artifact@v2
         with:
           name: fe_devops_image
-          path: ${{ github.workspace }}/artifacts
+          path: .
+        env:
+          retention-days: 1

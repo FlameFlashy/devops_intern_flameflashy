@@ -17,7 +17,7 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Build Docker image
-      run: 
+      run: |
         cd frontend
         cd nginx 
         cd configs
