@@ -25,6 +25,7 @@ jobs:
       - name: Run tests with pytest
         run: |
           cd app
+          pip install fastapi
           pip install pytest
           pytest tests/
 
