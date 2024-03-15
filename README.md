@@ -51,4 +51,4 @@ This Docker Compose configuration sets up a development environment consisting o
 Feel free to modify the configuration files and Dockerfiles to suit your specific requirements.
 
 ### if everything configured correctly, you should see under http://localhost
-![Docker-compose](https://file.notion.so/f/f/f18a0282-7ce6-4e01-a879-f3eab5e69ecf/e4765b4d-4b1f-4e84-b470-891eee0dd5e2/Screenshot_from_2023-09-21_14-18-27.png?id=790acd02-4879-4704-8c2b-bedd31485985&table=block&spaceId=f18a0282-7ce6-4e01-a879-f3eab5e69ecf&expirationTimestamp=1710453600000&signature=bLuoOHQ5bCFzS9u-0GVgT_bZxPCKCNWlTtEakL_K5Ho&downloadName=Screenshot+from+2023-09-21+14-18-27.png)
+![Docker-compose](localhost.png)
