@@ -25,10 +25,7 @@ jobs:
       - name: Run tests with pytest
         run: |
           cd app
-          pip install fastapi
-          pip install httpx
-          pip install pytest-mock
-          pip install pytest
+          pip install --no-cache-dir -r requirements.txt
           pytest tests/
 
       - name: Build Docker image
