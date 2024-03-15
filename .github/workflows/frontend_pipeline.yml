@@ -13,14 +13,14 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-      - name: Change directory to frontend
-        run: cd frontend/
-
       - name: Checkout code
         uses: actions/checkout@v2
 
       - name: Install chromium-browser
         run: sudo apt-get update && sudo apt-get install chromium-browser -y
+
+      - name: Change directory to frontend
+        run: cd frontend/
 
       - name: Check lint
         run: npm run lint
