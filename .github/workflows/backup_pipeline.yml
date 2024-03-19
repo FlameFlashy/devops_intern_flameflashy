@@ -23,7 +23,10 @@ jobs:
           chmod 600 backup_rsa_priv
           eval $(ssh-agent -s)
           ssh-add backup_rsa_priv
-        
+      
+      - name: Make backup.sh executable
+        run: chmod +x backup.sh    
+
       - name: Run backup script
         run: ./backup.sh --max-backups 2
         
