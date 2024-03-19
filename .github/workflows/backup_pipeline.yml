@@ -18,14 +18,14 @@ jobs:
         
       - name: Setup environment variables
         run: |
-          echo "PRIVATE_REPO_SSH_URL=git@github.com:FlameFlashy/devops_intern_flameflashy.git" >> .env
+          echo "PRIVATE_REPO_SSH_URL=git@github.com:FlameFlashy/devops_intern_flameflashy.git" > .env
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > backup_rsa_priv
           chmod 600 backup_rsa_priv
           eval $(ssh-agent -s)
           ssh-add backup_rsa_priv
         
       - name: Run backup script
-        run: bash backup.sh --max-backups 1
+        run: ./backup.sh --max-backups 2
         
       - name: Archive backup artifacts
         uses: actions/upload-artifact@v2
