@@ -18,9 +18,10 @@ jobs:
         
       - name: Setup environment variables
         run: |
-          echo "PRIVATE_REPO_SSH_URL=git@github.com:FlameFlashy/devops_intern_flameflashy.git" >> $GITHUB_ENV
+          echo "PRIVATE_REPO_SSH_URL=git@github.com:FlameFlashy/devops_intern_flameflashy.git" >> .env
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > backup_rsa_priv
           eval $(ssh-agent -s)
-          ssh-add ${{ secrets.SSH_PRIVATE_KEY }}
+          ssh-add backup_rsa_priv
         
       - name: Run backup script
         run: bash backup.sh --max-backups 1
