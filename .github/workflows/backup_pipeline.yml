@@ -18,7 +18,7 @@ jobs:
         
       - name: Setup environment variables
         run: |
-          echo PRIVATE_REPO_SSH_URL=git@github.com:FlameFlashy/devops_intern_flameflashy.git >> .env
+          echo "PRIVATE_REPO_SSH_URL=git@github.com:FlameFlashy/devops_intern_flameflashy.git" >> $GITHUB_ENV
           eval $(ssh-agent -s)
           ssh-add ${{ secrets.SSH_PRIVATE_KEY }}
         
