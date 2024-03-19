@@ -1,0 +1,42 @@
+name: Backup Workflow
+
+on:
+  push:
+    branches:
+      - '*'
+  pull_request:
+    branches:
+      - '*'
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        
+      - name: Setup environment variables
+        run: |
+          echo PRIVATE_REPO_SSH_URL=git@github.com:FlameFlashy/devops_intern_flameflashy.git > .env
+          eval $(ssh-agent -s)
+          ssh-add ${{ secrets.SSH_PRIVATE_KEY }}
+        
+      - name: Run backup script
+        run: bash backup.sh --max-backups 1
+        
+      - name: Archive backup artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: backup-archive
+          path: ${{ env.HOME }}/backup/*.tar.gz
+        env:
+          retention-days: 1  
+
+      - name: Upload versions JSON
+        uses: actions/upload-artifact@v2
+        with:
+          name: versions-json
+          path: ${{ env.HOME }}/backup/versions.json
+        env:
+          retention-days: 1
