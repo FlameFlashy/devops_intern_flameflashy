@@ -1,0 +1,42 @@
+name: Backend Pipeline
+
+on:
+  push:
+    paths:
+      - 'app/**'
+  pull_request:
+    paths:
+      - 'app/**'
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Check lint with flake8
+        run: |
+          cd app
+          pip install flake8
+          flake8
+
+      - name: Run tests with pytest
+        run: |
+          cd app
+          pip install --no-cache-dir -r requirements_dev.txt
+          pytest tests/
+
+      - name: Build Docker image
+        run: |
+          cd app
+          docker build -t be_devops:latest .
+      
+      - name: Save Docker image as artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: backend-image
+          path: .
+        env:
+          retention-days: 1

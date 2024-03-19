@@ -1,0 +1,45 @@
+name: Frontend Pipeline
+
+on:
+  push:
+    paths:
+      - 'frontend/**'
+  pull_request:
+    paths:
+      - 'frontend/**'
+
+jobs:
+  build_and_test:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install chromium-browser
+        run: sudo apt-get update && sudo apt-get install chromium-browser -y
+
+      - name: Change directory to frontend
+        run: cd frontend && npm install
+
+      - name: Check lint
+        run: cd frontend && npm run lint
+
+      - name: Run tests
+        run: |
+          cd frontend
+          npm ci
+          npm run test:ci
+
+      - name: Build Docker image
+        run: |
+          cd frontend
+          docker build -t fe_devops:latest .
+
+      - name: Save Docker image as artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: fe_devops_image
+          path: .
+        env:
+          retention-days: 1

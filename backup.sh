@@ -1,14 +1,14 @@
 #!/bin/bash
 # Загрузка переменных окружения из файла .env
-if [ -f .env ]; then
-    source .env
-else
-    echo "Файл .env не найден."
-    exit 1
-fi
+# if [ -f .env ]; then
+#     source .env
+# else
+#     echo "Файл .env не найден."
+#     exit 1
+# fi
 
-eval $(ssh-agent -s)
-ssh-add ${SSH_FILE}
+# eval $(ssh-agent -s)
+# ssh-add ${SSH_FILE}
 
 #задаю переменные
 REPO_DIR="repo_dir"
