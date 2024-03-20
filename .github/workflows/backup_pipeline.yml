@@ -17,7 +17,10 @@ jobs:
         uses: actions/checkout@v2
               
       - name: Make backup.sh executable
-        run: chmod +x backup.sh    
+        run: chmod +x backup.sh
+
+      - name: Install dependencies
+        run: apt install openssh-client    
 
       - name: Setup environment variables and run backup script
         run: |
