@@ -26,7 +26,8 @@ FILENAME=""
 
 
 #клонирую репозиторий через тпм папку
-git clone "${PRIVATE_REPO_SSH_URL}" "${REPO_DIR}" || {
+#git clone "${PRIVATE_REPO_SSH_URL}" "${REPO_DIR}" || {
+git clone git@github.com:flameflashy/devops_intern_flameflashy.git || {
     echo "Failed to clone private repo"
     rm -rf ${REPO_DIR}
     echo "Deleted temp repo directory ${REPO_DIR}"
