@@ -20,7 +20,7 @@ jobs:
         run: chmod +x backup.sh
 
       - name: Install dependencies
-        run: apt install openssh-client    
+        run: sudo apt install openssh-client    
 
       - name: Setup environment variables and run backup script
         run: |
