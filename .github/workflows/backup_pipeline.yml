@@ -22,7 +22,7 @@ jobs:
       - name: Setup environment variables and run backup script
         run: |
           eval $(ssh-agent -s)
-          ssh-add <(echo "${{ secrets.SSH_PRIVATE_KEY }}") | ssh-add -
+          ssh-add "${{ secrets.SSH_PRIVATE_KEY }}" | ssh-add -
           echo "PRIVATE_REPO_SSH_URL=git@github.com:flameflashy/devops_intern_flameflashy.git" > .env
           ./backup.sh --max-backups 2
         
