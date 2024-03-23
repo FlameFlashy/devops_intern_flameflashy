@@ -19,10 +19,17 @@ jobs:
       - name: Make backup.sh executable
         run: chmod +x backup.sh
 
+      - name: Create SSH key
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        run: |
+          echo "$SSH_PRIVATE_KEY" > private.key
+          sudo chmod 400 private.key
+
       - name: Add ssh key
         run: |
           eval $(ssh-agent -s)
-          ssh-add "${{ secrets.SSH_PRIVATE_KEY }}"
+          ssh-add private.key
 
       - name: Setup environment variables and run backup script
         run: |
