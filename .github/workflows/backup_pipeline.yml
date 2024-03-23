@@ -21,7 +21,7 @@ jobs:
 
       - name: Create SSH key
         env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY2 }}
         run: |
           echo "$SSH_PRIVATE_KEY" > private.key
           sudo chmod 400 private.key
@@ -33,7 +33,6 @@ jobs:
 
       - name: Setup environment variables and run backup script
         run: |
-          echo "PRIVATE_REPO_SSH_URL=git@github.com:flameflashy/devops_intern_flameflashy.git" > .env
           ./backup.sh --max-backups 2
         
       - name: Archive backup artifacts
