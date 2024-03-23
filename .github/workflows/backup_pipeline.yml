@@ -18,10 +18,7 @@ jobs:
               
       - name: Make backup.sh executable
         run: chmod +x backup.sh
-
-      - name: Install dependencies
-        run: sudo apt install openssh-client    
-
+        
       - name: Setup environment variables and run backup script
         run: |
           eval $(ssh-agent -s)
@@ -35,7 +32,7 @@ jobs:
           name: backup-archive
           path: ${{ env.HOME }}/backup/*.tar.gz
         env:
-          retention-days: 1  
+          retention-days: 5  
 
       - name: Upload versions JSON
         uses: actions/upload-artifact@v2
@@ -43,4 +40,4 @@ jobs:
           name: versions-json
           path: ${{ env.HOME }}/backup/versions.json
         env:
-          retention-days: 1
+          retention-days: 5
