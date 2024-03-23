@@ -22,7 +22,7 @@ jobs:
       - name: Add ssh key
         run: |
           eval $(ssh-agent -s)
-          ssh-add -T "${{ secrets.SSH_PRIVATE_KEY }}"
+          ssh-add "${{ secrets.SSH_PRIVATE_KEY }}"
 
       - name: Setup environment variables and run backup script
         run: |
