@@ -26,7 +26,10 @@ jobs:
           echo "$SSH_PRIVATE_KEY" > private.key
           sudo chmod 400 private.key
 
-      - name: Add ssh key
+      - name: Check ssh connect
+        run: ssh -T git@github.com
+
+        - name: Add ssh key
         run: |
           eval $(ssh-agent -s)
           ssh-add private.key
