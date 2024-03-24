@@ -26,13 +26,13 @@ jobs:
           echo "$SSH_PRIVATE_KEY" > private.key
           sudo chmod 400 private.key
 
-      - name: Check ssh connect
-        run: ssh -vT git@github.com
-
       - name: Add ssh key
         run: |
           eval $(ssh-agent -s)
           ssh-add private.key
+
+      - name: Check ssh connect
+        run: ssh -vT git@github.com
 
       - name: Setup environment variables and run backup script
         run: |
