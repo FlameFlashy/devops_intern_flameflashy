@@ -27,7 +27,7 @@ jobs:
           sudo chmod 400 private.key
 
       - name: Check ssh connect
-        run: ssh -T git@github.com
+        run: ssh -vT git@github.com
 
       - name: Add ssh key
         run: |
