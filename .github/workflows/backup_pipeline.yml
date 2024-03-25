@@ -38,7 +38,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: backup-archive
-          path: ${{ env.HOME }}/backup/*.tar.gz
+          path: ${{ HOME }}/backup/*.tar.gz
         env:
           retention-days: 5  
 
@@ -46,6 +46,6 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: versions-json
-          path: ${{ env.HOME }}/backup/versions.json
+          path: ${{ HOME }}/backup/versions.json
         env:
           retention-days: 5
