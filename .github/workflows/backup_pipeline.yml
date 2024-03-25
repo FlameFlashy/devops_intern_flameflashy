@@ -21,13 +21,14 @@ jobs:
 
       - name: Create SSH key
         run: |
+          mkdir -p ~/.ssh
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
 
       - name: Add ssh key
         run: |
           eval $(ssh-agent -s)
-          ssh-add private_key
+          ssh-add ~/.ssh/id_rsa
 
       - name: Check ssh connect
         run: ssh -vT git@github.com
