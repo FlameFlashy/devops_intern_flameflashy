@@ -12,7 +12,7 @@
 
 #задаю переменные
 REPO_DIR="repo_dir"
-BACKUP_DIR="${HOME}/backup"
+BACKUP_DIR="${env.HOME}/backup"
 MAX_BACKUPS=""
 BASE_BACKUP_NAME="devops_internship"
 VERSIONS_FILE="${BACKUP_DIR}/versions.json"
