@@ -35,6 +35,7 @@ jobs:
           ./backup.sh --max-backups 2
           cd $HOME
           cd backup
+          pwd
 
       - name: Archive backup artifacts
         uses: actions/upload-artifact@v2
