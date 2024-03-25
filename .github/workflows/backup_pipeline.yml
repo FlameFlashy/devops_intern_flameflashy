@@ -23,13 +23,13 @@ jobs:
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
         run: |
-          echo "$SSH_PRIVATE_KEY" > private.key
-          sudo chmod 400 private.key
+          echo "$SSH_PRIVATE_KEY" > private_key
+          sudo chmod 400 private_key
 
       - name: Add ssh key
         run: |
           eval $(ssh-agent -s)
-          ssh-add private.key
+          ssh-add private_key
 
       - name: Check ssh connect
         run: ssh -vT git@github.com
