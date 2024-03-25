@@ -30,9 +30,6 @@ jobs:
           eval $(ssh-agent -s)
           ssh-add ~/.ssh/id_rsa
 
-      - name: Check ssh connect
-        run: ssh -vT git@github.com
-
       - name: Setup environment variables and run backup script
         run: |
           ./backup.sh --max-backups 2
