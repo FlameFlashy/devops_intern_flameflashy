@@ -31,8 +31,10 @@ jobs:
           ssh-add ~/.ssh/id_rsa
 
       - name: Setup environment variables and run backup script
-        run: ./backup.sh --max-backups 2
-        
+        run: |
+          ./backup.sh --max-backups 2
+          ls -l $env.HOME/backup/
+
       - name: Archive backup artifacts
         uses: actions/upload-artifact@v2
         with:
