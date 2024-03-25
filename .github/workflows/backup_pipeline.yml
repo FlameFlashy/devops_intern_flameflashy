@@ -22,7 +22,7 @@ jobs:
       - name: Create SSH key
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          echo ${{ secrets.SSH_PRIVATE_KEY }} > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
 
       - name: Add ssh key
@@ -46,6 +46,7 @@ jobs:
       - name: Upload versions JSON
         uses: actions/upload-artifact@v2
         with:
+          run: env
           name: versions-json
           path: /home/runner/backup/versions.json
           if-no-files-found: warn
