@@ -31,14 +31,13 @@ jobs:
           ssh-add ~/.ssh/id_rsa
 
       - name: Setup environment variables and run backup script
-        run: |
-          ./backup.sh --max-backups 2
+        run: ./backup.sh --max-backups 2
         
       - name: Archive backup artifacts
         uses: actions/upload-artifact@v2
         with:
           name: backup-archive
-          path: ${{ env.HOME }}/backup/*.tar.gz
+          path: $HOME/backup/*.tar.gz
           if-no-files-found: warn
         env:
           retention-days: 5  
@@ -47,7 +46,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: versions-json
-          path: ${{ env.HOME }}/backup/versions.json
+          path: $HOME/backup/versions.json
           if-no-files-found: warn
         env:
           retention-days: 5
