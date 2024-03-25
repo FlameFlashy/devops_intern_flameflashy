@@ -19,7 +19,7 @@ jobs:
       - name: Make backup.sh executable
         run: chmod +x backup.sh
 
-      - name: Setup environment variables and run backup script
+      - name: Create ssh-key and add to agent. Setup environment variables and run backup script
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa_actions
