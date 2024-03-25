@@ -36,6 +36,9 @@ jobs:
           ls -l $HOME/backup/
 
       - name: Archive backup artifacts
+        run: |
+          cd $HOME
+          cd backup
         uses: actions/upload-artifact@v2
         with:
           name: backup-archive
