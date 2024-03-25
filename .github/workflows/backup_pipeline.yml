@@ -22,18 +22,17 @@ jobs:
       - name: Create SSH key
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa_actions
+          chmod 600 ~/.ssh/id_rsa_actions
 
       - name: Add ssh key
         run: |
           eval $(ssh-agent -s)
-          ssh-add ~/.ssh/id_rsa
+          ssh-add ~/.ssh/id_rsa_actions
 
       - name: Setup environment variables and run backup script
         run: |
-          ps aux | grep ssh
-          ./backup.sh --max-backups 2
+          ./backup.sh --max-backups 1
 
       - name: Archive backup artifacts
         uses: actions/upload-artifact@v2
@@ -42,12 +41,11 @@ jobs:
           path: /home/runner/backup/*.tar.gz
           if-no-files-found: warn
         env:
-          retention-days: 5  
+          retention-days: 5
 
       - name: Upload versions JSON
         uses: actions/upload-artifact@v2
         with:
-          run: echo $HOME
           name: versions-json
           path: /home/runner/backup/versions.json
           if-no-files-found: warn
