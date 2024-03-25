@@ -39,6 +39,7 @@ jobs:
         with:
           name: backup-archive
           path: ${{ env.HOME }}/backup/*.tar.gz
+          if-no-files-found: warn
         env:
           retention-days: 5  
 
@@ -47,5 +48,6 @@ jobs:
         with:
           name: versions-json
           path: ${{ env.HOME }}/backup/versions.json
+          if-no-files-found: warn
         env:
           retention-days: 5
