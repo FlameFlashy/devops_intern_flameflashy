@@ -19,19 +19,24 @@ jobs:
       - name: Make backup.sh executable
         run: chmod +x backup.sh
 
-      - name: Create SSH key
+      # - name: Create SSH key
+      #   run: |
+      #     mkdir -p ~/.ssh
+      #     echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa_actions
+      #     chmod 600 ~/.ssh/id_rsa_actions
+
+      # - name: Add ssh key
+      #   run: |
+      #     eval $(ssh-agent -s)
+      #     ssh-add ~/.ssh/id_rsa_actions
+
+      - name: Setup environment variables and run backup script
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa_actions
           chmod 600 ~/.ssh/id_rsa_actions
-
-      - name: Add ssh key
-        run: |
           eval $(ssh-agent -s)
           ssh-add ~/.ssh/id_rsa_actions
-
-      - name: Setup environment variables and run backup script
-        run: |
           ./backup.sh --max-backups 1
 
       - name: Archive backup artifacts
