@@ -33,15 +33,15 @@ jobs:
       - name: Setup environment variables and run backup script
         run: |
           ./backup.sh --max-backups 2
-          cd $HOME
-          cd backup
+          cd $HOME/
+          cd backup/
           pwd
 
       - name: Archive backup artifacts
         uses: actions/upload-artifact@v2
         with:
           name: backup-archive
-          path: .*.tar.gz
+          path: *.tar.gz
           if-no-files-found: warn
         env:
           retention-days: 5  
@@ -50,7 +50,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: versions-json
-          path: .versions.json
+          path: versions.json
           if-no-files-found: warn
         env:
           retention-days: 5
