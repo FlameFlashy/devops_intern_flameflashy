@@ -42,8 +42,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: backup-archive
-          path: |
-            $HOME/backup/*.tar.gz
+          path: /*.tar.gz
           if-no-files-found: warn
         env:
           retention-days: 5  
@@ -52,8 +51,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: versions-json
-          path: |
-            $HOME/backup/versions.json
+          path: versions.json
           if-no-files-found: warn
         env:
           retention-days: 5
