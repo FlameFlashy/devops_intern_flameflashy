@@ -6,7 +6,8 @@ on:
       - 'frontend/nginx/configs/**'
   pull_request:
     paths:
-      - 'frontend/nginx/configs/**' 
+      - 'frontend/nginx/configs/**'
+  workflow_dispatch:
 
 jobs:
   build_and_save_image:
