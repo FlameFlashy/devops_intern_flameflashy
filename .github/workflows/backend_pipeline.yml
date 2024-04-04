@@ -33,6 +33,22 @@ jobs:
         run: |
           cd app
           docker build -t be_devops:latest .
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Tag Docker image
+        run: |
+          docker tag be_devops:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/backend-image:latest
+
+      - name: Push Docker image to ECR
+        run: |
+          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/backend-image:latest
       
       - name: Save Docker image as artifact
         uses: actions/upload-artifact@v2
