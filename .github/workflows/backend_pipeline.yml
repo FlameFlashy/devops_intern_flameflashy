@@ -43,6 +43,8 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Tag Docker image and push
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}0
         run: |
           docker tag be_devops:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/backend-image:latest
           docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/backend-image:latest
