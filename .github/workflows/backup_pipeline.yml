@@ -65,20 +65,20 @@ jobs:
           aws s3 cp ~/backup/*.tar.gz s3://devops-intern-flameflashy
           aws s3 cp ~/backup/versions.json s3://devops-intern-flameflashy
 
-      - name: Archive backup to artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: backup-archive
-          path: ~/backup/*.tar.gz
-          if-no-files-found: warn
-        env:
-          retention-days: 5
+      # - name: Archive backup to artifacts
+      #   uses: actions/upload-artifact@v2
+      #   with:
+      #     name: backup-archive
+      #     path: ~/backup/*.tar.gz
+      #     if-no-files-found: warn
+      #   env:
+      #     retention-days: 5
 
-      - name: Upload versions JSON to artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: versions-json
-          path: ~/backup/versions.json
-          if-no-files-found: warn
-        env:
-          retention-days: 5
+      # - name: Upload versions JSON to artifacts
+      #   uses: actions/upload-artifact@v2
+      #   with:
+      #     name: versions-json
+      #     path: ~/backup/versions.json
+      #     if-no-files-found: warn
+      #   env:
+      #     retention-days: 5
