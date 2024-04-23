@@ -1,0 +1,38 @@
+name: Deploy Application
+
+on:
+  push:
+    branches:
+      - DO_05
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+      
+    - name: Connect to VM via SSH
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.SSH_EC2_HOST }}
+        username: ${{ secrets.SSH_EC2_USERNAME }}
+        key: ${{ secrets.SSH_EC2_PRIVATE_KEY }}
+        port: ${{ secrets.SSH_EC2_PORT }}
+
+    - name: Pull Docker images from private registry
+      run: |
+        aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com
+        docker-compose pull
+        env:
+            AWS_REGION: ${{ secrets.AWS_REGION }}
+            AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+
+    - name: Run Docker Compose to deploy application
+      run: |
+        docker-compose -f docker-compose-prod.yaml up -d
+
+    # - name: Test application availability
+    #   run: |
+    #     # Add your test commands here to verify the application is accessible over the internet
