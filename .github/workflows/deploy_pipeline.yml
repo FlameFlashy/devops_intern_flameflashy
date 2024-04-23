@@ -3,7 +3,7 @@ name: Deploy Application
 on:
   push:
     branches:
-      - DO_05
+      - DO_5
 
 jobs:
   deploy:
