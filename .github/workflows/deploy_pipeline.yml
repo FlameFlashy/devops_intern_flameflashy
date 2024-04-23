@@ -11,14 +11,14 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       
     - name: Connect to VM via SSH
       uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.SSH_EC2_HOST }}
         username: ${{ secrets.SSH_EC2_USERNAME }}
-        key: ${{ secrets.SSH_EC2_PRIVATE_KEY }}
+        key: ${{ secrets.SSH_EC2_PRIVATE_KEY_PEM }}
         port: ${{ secrets.SSH_EC2_PORT }}
 
     - name: Pull Docker images from private registry
