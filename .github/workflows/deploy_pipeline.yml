@@ -18,7 +18,7 @@ jobs:
       with:
         host: ${{ secrets.SSH_EC2_HOST }}
         username: ${{ secrets.SSH_EC2_USERNAME }}
-        key: ${{ secrets.SSH_PRIVATE_KEY_MANUAL_ED }}
+        key: ${{ secrets.SSH_PRIVATE_KEY_PEM }}
         port: ${{ secrets.SSH_EC2_PORT }}
 
     - name: Pull Docker images from private registry
