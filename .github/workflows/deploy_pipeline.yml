@@ -27,20 +27,16 @@ jobs:
     - name: Configure aws credential
       run: aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }} && aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }} && aws configure set default.region ${{ secrets.AWS_REGION }}
 
-    - name: Pull Docker images from private registry
+    - name: Pull and up docker images from private registry
       run: |
-        export  AWS_REGION: ${{ secrets.AWS_REGION }}
-        export  AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
-        export  DB_USER: ${{ secrets.DB_USER }}
-        export  DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-        export  DB_ENDPOINT: ${{ secrets.DB_ENDPOINT }}
-        export  DB_NAME: ${{ secrets.DB_NAME }}
-        export  POSTGRES_HOST_AUTH_METHOD: ${{ secrets.POSTGRES_HOST_AUTH_METHOD }}
+        export  AWS_REGION=${{ secrets.AWS_REGION }}
+        export  AWS_ACCOUNT_ID=${{ secrets.AWS_ACCOUNT_ID }}
+        export  DB_USER=${{ secrets.DB_USER }}
+        export  DB_PASSWORD=${{ secrets.DB_PASSWORD }}
+        export  DB_ENDPOINT=${{ secrets.DB_ENDPOINT }}
+        export  DB_NAME=${{ secrets.DB_NAME }}
+        export  POSTGRES_HOST_AUTH_METHOD=${{ secrets.POSTGRES_HOST_AUTH_METHOD }}
         aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com
-        docker-compose pull
-
-    - name: Run Docker Compose to deploy application
-      run: |
         docker-compose -f docker-compose-prod.yaml up -d
 
     # - name: Test application availability
