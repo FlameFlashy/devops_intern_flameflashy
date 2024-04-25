@@ -21,13 +21,24 @@ jobs:
         key: ${{ secrets.SSH_EC2_PRIVATE_KEY_PEM }}
         port: ${{ secrets.SSH_EC2_PORT }}
 
+    - name: Install aws cli
+      run: sudo apt install awscli -y
+
+    - name: Configure aws credential
+      run: aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }} && aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }} && aws configure set default.region ${{ secrets.AWS_REGION }}
+
     - name: Pull Docker images from private registry
       run: |
+        env:
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+          AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          DB_ENDPOINT: ${{ secrets.DB_ENDPOINT }}
+          DB_NAME: ${{ secrets.DB_NAME }}
+          POSTGRES_HOST_AUTH_METHOD: ${{ secrets.POSTGRES_HOST_AUTH_METHOD }}
         aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com
         docker-compose pull
-        env:
-            AWS_REGION: ${{ secrets.AWS_REGION }}
-            AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
 
     - name: Run Docker Compose to deploy application
       run: |

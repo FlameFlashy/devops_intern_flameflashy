@@ -1,4 +1,4 @@
-version: '3.7'
+version: '3.2'
 
 services:
   database:
@@ -13,12 +13,12 @@ services:
       - "5432:5432"
 
   frontend:
-    image: <AWS_ACCOUNT_ID>.dkr.ecr.<REGION>.amazonaws.com/fe_devops:latest
+    image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/flameflashy-intern:fe_devops
     ports:
       - "4200:4200"
 
   app:
-    image: <AWS_ACCOUNT_ID>.dkr.ecr.<REGION>.amazonaws.com/be_devops:latest
+    image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/flameflashy-intern:be_devops
     environment:
       - DB_USER=${DB_USER}
       - DB_PASSWORD=${DB_PASSWORD}
@@ -31,7 +31,7 @@ services:
       - database
 
   nginx:
-    image: <AWS_ACCOUNT_ID>.dkr.ecr.<REGION>.amazonaws.com/nginx_devops:latest
+    image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/flameflashy-intern:nginx_devops
     ports:
       - "80:80"
     depends_on:
