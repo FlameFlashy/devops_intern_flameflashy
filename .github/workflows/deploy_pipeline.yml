@@ -29,14 +29,13 @@ jobs:
 
     - name: Pull Docker images from private registry
       run: |
-        env:
-          AWS_REGION: ${{ secrets.AWS_REGION }}
-          AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
-          DB_USER: ${{ secrets.DB_USER }}
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-          DB_ENDPOINT: ${{ secrets.DB_ENDPOINT }}
-          DB_NAME: ${{ secrets.DB_NAME }}
-          POSTGRES_HOST_AUTH_METHOD: ${{ secrets.POSTGRES_HOST_AUTH_METHOD }}
+        export  AWS_REGION: ${{ secrets.AWS_REGION }}
+        export  AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+        export  DB_USER: ${{ secrets.DB_USER }}
+        export  DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+        export  DB_ENDPOINT: ${{ secrets.DB_ENDPOINT }}
+        export  DB_NAME: ${{ secrets.DB_NAME }}
+        export  POSTGRES_HOST_AUTH_METHOD: ${{ secrets.POSTGRES_HOST_AUTH_METHOD }}
         aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com
         docker-compose pull
 
