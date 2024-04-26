@@ -20,28 +20,44 @@ jobs:
         username: ${{ secrets.SSH_EC2_USERNAME }}
         key: ${{ secrets.SSH_EC2_PRIVATE_KEY_PEM }}
         port: ${{ secrets.SSH_EC2_PORT }}
+        script: |
+          sudo apt install awscli -y
+          aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }} && aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }} && aws configure set default.region ${{ secrets.AWS_REGION }}
+          export  AWS_REGION=${{ secrets.AWS_REGION }}
+          export  AWS_ACCOUNT_ID=${{ secrets.AWS_ACCOUNT_ID }}
+          export  DB_USER=${{ secrets.DB_USER }}
+          export  DB_PASSWORD=${{ secrets.DB_PASSWORD }}
+          export  DB_ENDPOINT=${{ secrets.DB_ENDPOINT }}
+          export  DB_NAME=${{ secrets.DB_NAME }}
+          export  POSTGRES_HOST_AUTH_METHOD=${{ secrets.POSTGRES_HOST_AUTH_METHOD }}
+          aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa_actions
+          chmod 600 ~/.ssh/id_rsa_actions
+          curl -o docker-compose-prod.yml -u flameflashy: --key ~/.ssh/id_rsa_actions https://raw.githubusercontent.com/FlameFlashy/devops_intern_flameflashy/DO_5/docker-compose-prod.yml
+          docker-compose -f docker-compose-prod.yml up -d
 
-    - name: Install aws cli
-      run: sudo apt install awscli -y
+    # - name: Install aws cli
+    #   run: sudo apt install awscli -y
 
-    - name: Configure aws credential
-      run: aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }} && aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }} && aws configure set default.region ${{ secrets.AWS_REGION }}
+    # - name: Configure aws credential
+    #   run: aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }} && aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }} && aws configure set default.region ${{ secrets.AWS_REGION }}
 
-    - name: Pull and up docker images from private registry
-      run: |
-        export  AWS_REGION=${{ secrets.AWS_REGION }}
-        export  AWS_ACCOUNT_ID=${{ secrets.AWS_ACCOUNT_ID }}
-        export  DB_USER=${{ secrets.DB_USER }}
-        export  DB_PASSWORD=${{ secrets.DB_PASSWORD }}
-        export  DB_ENDPOINT=${{ secrets.DB_ENDPOINT }}
-        export  DB_NAME=${{ secrets.DB_NAME }}
-        export  POSTGRES_HOST_AUTH_METHOD=${{ secrets.POSTGRES_HOST_AUTH_METHOD }}
-        aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com
-        mkdir -p ~/.ssh
-        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa_actions
-        chmod 600 ~/.ssh/id_rsa_actions
-        curl -o docker-compose-prod.yml -u flameflashy: --key ~/.ssh/id_rsa_actions https://raw.githubusercontent.com/FlameFlashy/devops_intern_flameflashy/DO_5/docker-compose-prod.yml?token=GHSAT0AAAAAACHJKV5NLKIHC2C73ZKC5G3IZRLTEFA
-        docker-compose -f docker-compose-prod.yml up -d
+    # - name: Pull and up docker images from private registry
+    #   run: |
+    #     export  AWS_REGION=${{ secrets.AWS_REGION }}
+    #     export  AWS_ACCOUNT_ID=${{ secrets.AWS_ACCOUNT_ID }}
+    #     export  DB_USER=${{ secrets.DB_USER }}
+    #     export  DB_PASSWORD=${{ secrets.DB_PASSWORD }}
+    #     export  DB_ENDPOINT=${{ secrets.DB_ENDPOINT }}
+    #     export  DB_NAME=${{ secrets.DB_NAME }}
+    #     export  POSTGRES_HOST_AUTH_METHOD=${{ secrets.POSTGRES_HOST_AUTH_METHOD }}
+    #     aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com
+    #     mkdir -p ~/.ssh
+    #     echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa_actions
+    #     chmod 600 ~/.ssh/id_rsa_actions
+    #     curl -o docker-compose-prod.yml -u flameflashy: --key ~/.ssh/id_rsa_actions https://raw.githubusercontent.com/FlameFlashy/devops_intern_flameflashy/DO_5/docker-compose-prod.yml?token=GHSAT0AAAAAACHJKV5NLKIHC2C73ZKC5G3IZRLTEFA
+    #     docker-compose -f docker-compose-prod.yml up -d
 
     # - name: Test application availability
     #   run: |
