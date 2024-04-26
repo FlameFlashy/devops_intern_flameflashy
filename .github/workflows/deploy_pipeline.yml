@@ -37,7 +37,8 @@ jobs:
         export  DB_NAME=${{ secrets.DB_NAME }}
         export  POSTGRES_HOST_AUTH_METHOD=${{ secrets.POSTGRES_HOST_AUTH_METHOD }}
         aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com
-        docker-compose -f docker-compose-prod.yaml up -d
+        curl -o docker-compose-prod.yml https://raw.githubusercontent.com/FlameFlashy/devops_intern_flameflashy/DO_5/docker-compose-prod.yml?token=GHSAT0AAAAAACHJKV5N2NBZZDSJYZ3GYGKKZRLQ2UA
+        docker-compose -f docker-compose-prod.yml up -d
 
     # - name: Test application availability
     #   run: |
