@@ -3,7 +3,7 @@ name: Deploy Application
 on:
   push:
     branches:
-      - DO_5
+      - main
 
 jobs:
   deploy:
@@ -22,16 +22,6 @@ jobs:
         key: ${{ secrets.SSH_EC2_PRIVATE_KEY_PEM }}
         port: ${{ secrets.SSH_EC2_PORT }}
         script: |
+          docker-compose -f docker-compose-prod.yml pull
           docker-compose -f docker-compose-prod.yml up -d
 
-    # - name: Connect to VM via SSH and pull
-    #   run: |
-    #     mkdir -p ~/.ssh
-    #     echo "${{ secrets.SSH_EC2_PRIVATE_KEY_PEM }}" > ~/.ssh/ssh-action.pem
-    #     chmod 600 ~/.ssh/ssh-action.pem
-    #     ssh-keyscan -H ${{ secrets.SSH_EC2_HOST }} > ~/.ssh/know_hosts
-    #     ssh -i "~/.ssh/ssh-action.pem" ${{ secrets.SSH_EC2_USERNAME }}@${{ secrets.SSH_EC2_HOST }} "docker-compose -f docker-compose-prod.yml up -d && exit"
-
-    - name: Test application availability
-      run: |
-        curl http://ec2-3-78-128-247.eu-central-1.compute.amazonaws.com
