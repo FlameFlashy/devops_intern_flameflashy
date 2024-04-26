@@ -33,10 +33,10 @@ jobs:
         port: ${{ secrets.SSH_EC2_PORT }}
         script: |
           sudo apt install awscli -y
-          aws configure set aws_access_key_id ${AWS_ACCESS_KEY_ID} && aws configure set aws_secret_access_key ${AWS_SECRET_ACCESS_KEY} && aws configure set default.region ${AWS_REGION}
-          aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com
+          aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID && aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY && aws configure set default.region $AWS_REGION
+          aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
           mkdir -p ~/.ssh
-          echo "${secrets.SSH_PRIVATE_KEY}" > ~/.ssh/id_rsa_actions
+          echo "$secrets.SSH_PRIVATE_KEY" > ~/.ssh/id_rsa_actions
           chmod 600 ~/.ssh/id_rsa_actions
           curl -o docker-compose-prod.yml -u flameflashy: --key ~/.ssh/id_rsa_actions https://raw.githubusercontent.com/FlameFlashy/devops_intern_flameflashy/DO_5/docker-compose-prod.yml
           docker-compose -f docker-compose-prod.yml up -d
