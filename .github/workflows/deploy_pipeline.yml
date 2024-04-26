@@ -19,7 +19,7 @@ jobs:
         echo "${{ secrets.SSH_EC2_PRIVATE_KEY_PEM }}" > ~/.ssh/ssh-action.pem
         chmod 600 ~/.ssh/ssh-action.pem
         ssh-keyscan -H ${{ secrets.SSH_EC2_HOST }} > ~/.ssh/know_hosts
-        ssh -i ~/ssh-action.pem ${{ secrets.SSH_EC2_USERNAME }}@${{ secrets.SSH_EC2_HOST }} "docker-compose -f docker-compose-prod.yml up -d && exit"
+        ssh -i ~/.ssh/ssh-action.pem ${{ secrets.SSH_EC2_USERNAME }}@${{ secrets.SSH_EC2_HOST }} "docker-compose -f docker-compose-prod.yml up -d && exit"
 
     # - name: Test application availability
     #   run: |
