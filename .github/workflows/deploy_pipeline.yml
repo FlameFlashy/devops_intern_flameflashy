@@ -40,7 +40,7 @@ jobs:
         mkdir -p ~/.ssh
         echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa_actions
         chmod 600 ~/.ssh/id_rsa_actions
-        curl -o docker-compose-prod.yml -u flameflashy: --key ~/.ssh/id_rsa_actions scp://raw.githubusercontent.com/FlameFlashy/devops_intern_flameflashy/DO_5/docker-compose-prod.yml
+        curl -o docker-compose-prod.yml -u flameflashy: --key ~/.ssh/id_rsa_actions https://raw.githubusercontent.com/FlameFlashy/devops_intern_flameflashy/DO_5/docker-compose-prod.yml
         docker-compose -f docker-compose-prod.yml up -d
 
     # - name: Test application availability
