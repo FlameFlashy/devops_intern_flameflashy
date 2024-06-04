@@ -48,13 +48,6 @@ resource "aws_route_table_association" "main" {
   route_table_id = aws_route_table.main.id
 }
 
-# Route internet gateway
-resource "aws_route" "internet_gateway" {
-  route_table_id         = aws_vpc.main.main_route_table_id
-  destination_cidr_block = "0.0.0.0/0"
-  gateway_id             = aws_internet_gateway.main.id
-}
-
 # IAM Role for ECS
 resource "aws_iam_role" "ecs_task_execution" {
   name = "ecsTaskExecutionRole"
@@ -177,13 +170,13 @@ resource "aws_ecs_capacity_provider" "main" {
   }
 }
 
-# ECS Task Definition for Frontend
-resource "aws_ecs_task_definition" "frontend" {
-  family                   = "frontend"
+# Combined ECS Task Definition for Frontend and Backend
+resource "aws_ecs_task_definition" "main" {
+  family                   = "ecs-task"
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
-  cpu                      = "256"
-  memory                   = "512"
+  cpu                      = "512"
+  memory                   = "1024"
   execution_role_arn       = aws_iam_role.ecs_task_execution.arn
 
   container_definitions = jsonencode([
@@ -204,20 +197,7 @@ resource "aws_ecs_task_definition" "frontend" {
           "awslogs-stream-prefix" = "ecs"
         }
       }
-    }
-  ])
-}
-
-# ECS Task Definition for Backend
-resource "aws_ecs_task_definition" "app" {
-  family                   = "app"
-  network_mode             = "awsvpc"
-  requires_compatibilities = ["FARGATE"]
-  cpu                      = "256"
-  memory                   = "512"
-  execution_role_arn       = aws_iam_role.ecs_task_execution.arn
-
-  container_definitions = jsonencode([
+    },
     {
       name  = "app"
       image = var.app_image
@@ -261,10 +241,11 @@ resource "aws_ecs_task_definition" "app" {
   ])
 }
 
-resource "aws_ecs_service" "frontend" {
-  name            = "frontend-service"
+# ECS Service
+resource "aws_ecs_service" "main" {
+  name            = "ecs-service"
   cluster         = aws_ecs_cluster.main.id
-  task_definition = aws_ecs_task_definition.frontend.arn
+  task_definition = aws_ecs_task_definition.main.arn
   desired_count   = 1
   launch_type     = "FARGATE"
   network_configuration {
@@ -272,18 +253,17 @@ resource "aws_ecs_service" "frontend" {
     security_groups  = [aws_security_group.main.id]
     assign_public_ip = true
   }
-}
 
-resource "aws_ecs_service" "app" {
-  name            = "app-service"
-  cluster         = aws_ecs_cluster.main.id
-  task_definition = aws_ecs_task_definition.app.arn
-  desired_count   = 1
-  launch_type     = "FARGATE"
-  network_configuration {
-    subnets          = [aws_subnet.main[0].id, aws_subnet.main[1].id]
-    security_groups  = [aws_security_group.main.id]
-    assign_public_ip = true
+  load_balancer {
+    target_group_arn = aws_lb_target_group.frontend.arn
+    container_name   = "frontend"
+    container_port   = 4200
+  }
+
+  load_balancer {
+    target_group_arn = aws_lb_target_group.app.arn
+    container_name   = "app"
+    container_port   = 8000
   }
 }
 
@@ -315,7 +295,7 @@ resource "aws_lb_target_group" "frontend" {
 
 resource "aws_lb_target_group" "app" {
   name        = "app-target"
-  port        = 8000
+  port        = 80
   protocol    = "HTTP"
   vpc_id      = aws_vpc.main.id
   target_type = "ip"
@@ -330,6 +310,17 @@ resource "aws_lb_target_group" "app" {
   }
 }
 
+resource "aws_lb_listener" "frontend" {
+  load_balancer_arn = aws_lb.main.arn
+  port              = "80"
+  protocol          = "HTTP"
+
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.frontend.arn
+  }
+}
+
 resource "aws_lb_listener" "app" {
   load_balancer_arn = aws_lb.main.arn
   port              = "8000"
@@ -338,17 +329,6 @@ resource "aws_lb_listener" "app" {
   default_action {
     type             = "forward"
     target_group_arn = aws_lb_target_group.app.arn
-  }
-}
-
-resource "aws_lb_listener" "frontend" {
-  load_balancer_arn = aws_lb.main.arn
-  port              = "4200"
-  protocol          = "HTTP"
-
-  default_action {
-    type             = "forward"
-    target_group_arn = aws_lb_target_group.frontend.arn
   }
 }
 
