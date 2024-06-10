@@ -92,6 +92,11 @@ resource "aws_iam_role_policy_attachment" "ecs_task_execution" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
 }
 
+resource "aws_iam_role_policy_attachment" "ecs_task_execution_ecr_access" {
+  role       = aws_iam_role.ecs_task_execution.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
+}
+
 resource "aws_iam_instance_profile" "ecs_instance_profile" {
   name = "ecsInstanceProfile"
   role = aws_iam_role.ecs_task_execution.name
@@ -115,6 +120,16 @@ resource "aws_security_group" "main" {
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
+}
+
+resource "aws_security_group_rule" "allow_internal_communication" {
+  type                     = "ingress"
+  from_port                = 0
+  to_port                  = 65535
+  protocol                 = "tcp"
+  security_group_id        = aws_security_group.main.id
+  source_security_group_id = aws_security_group.main.id
+  description              = "Allow internal communication within the security group"
 }
 
 # ECS Cluster
@@ -170,7 +185,7 @@ resource "aws_ecs_capacity_provider" "main" {
   }
 }
 
-# Combined ECS Task Definition for Frontend and Backend
+#ECS Task Definition for Frontend and Backend
 resource "aws_ecs_task_definition" "main" {
   family                   = "ecs-task"
   network_mode             = "awsvpc"
@@ -277,8 +292,8 @@ resource "aws_lb" "main" {
 }
 
 resource "aws_lb_target_group" "frontend" {
-  name        = "frontend-target"
-  port        = 80
+  name        = "frontend"
+  port        = 4200
   protocol    = "HTTP"
   vpc_id      = aws_vpc.main.id
   target_type = "ip"
@@ -294,15 +309,15 @@ resource "aws_lb_target_group" "frontend" {
 }
 
 resource "aws_lb_target_group" "app" {
-  name        = "app-target"
-  port        = 80
+  name        = "app"
+  port        = 8000
   protocol    = "HTTP"
   vpc_id      = aws_vpc.main.id
   target_type = "ip"
 
   health_check {
     interval            = 30
-    path                = "/"
+    path                = "/api/*"
     timeout             = 5
     healthy_threshold   = 2
     unhealthy_threshold = 2
@@ -310,9 +325,10 @@ resource "aws_lb_target_group" "app" {
   }
 }
 
+# Listener for frontend
 resource "aws_lb_listener" "frontend" {
   load_balancer_arn = aws_lb.main.arn
-  port              = "80"
+  port              = 80
   protocol          = "HTTP"
 
   default_action {
@@ -321,14 +337,39 @@ resource "aws_lb_listener" "frontend" {
   }
 }
 
-resource "aws_lb_listener" "app" {
-  load_balancer_arn = aws_lb.main.arn
-  port              = "8000"
-  protocol          = "HTTP"
+# Listener rule for backend path
+resource "aws_lb_listener_rule" "app" {
+  listener_arn = aws_lb_listener.frontend.arn
 
-  default_action {
+  action {
     type             = "forward"
     target_group_arn = aws_lb_target_group.app.arn
+  }
+
+  condition {
+    path_pattern {
+      values = ["/api/*"]
+    }
+  }
+}
+
+resource "aws_security_group" "database" {
+  name        = "database-sg"
+  description = "Allow inbound traffic for database"
+  vpc_id      = aws_vpc.main.id
+
+  ingress {
+    from_port   = 5432
+    to_port     = 5432
+    protocol    = "tcp"
+    cidr_blocks = ["10.0.0.0/16"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
   }
 }
 
