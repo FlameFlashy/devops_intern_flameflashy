@@ -5,3 +5,7 @@
 *.env
 /pg_data*
 .ssh
+
+
+**/.terraform/*
+.terraform.lock.hcl
